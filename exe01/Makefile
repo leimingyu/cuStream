@@ -37,14 +37,14 @@ endif
 #-----------------------------------------------------------------------------#
 all: build 
 
-build: stream_sync 
+build: stream_async 
 
-stream_sync: stream_sync.cu
+stream_async: stream_async.cu
 	$(NVC) $(NV_INC) $(NV_LIB) $(NVCC_FLAGS) $(GENCODE_FLAGS) -o $@ $^ $(LIB_LINKER)
 
 run: build 
-	./stream_sync
+	./stream_async
 
 .PHONY: clean
 clean:
-	rm -rf stream_sync 
+	rm -rf stream_async 
