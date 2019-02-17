@@ -40,8 +40,17 @@ int main(int argc, char **argv)
 	std::cout << "Launching " << streamsNum << " cuda streams." << std::endl;
 	
 	// host 
+	/*
+	// pageable
 	float *h_a = (float*)malloc(sizeof(float) * N);
 	float *h_b = (float*)malloc(sizeof(float) * N);
+	*/
+
+
+	float *h_a = NULL;
+	float *h_b = NULL;
+	cudaMallocHost((void**)&h_a, sizeof(float) * N);
+	cudaMallocHost((void**)&h_b, sizeof(float) * N);
 
 	// init 
 	for(int i=0; i<N; i++) {
@@ -76,6 +85,8 @@ int main(int argc, char **argv)
 	cudaMemcpyAsync(h_a, d_a, sizeof(float)*N, cudaMemcpyDeviceToHost, streams[0]);
 	cudaMemcpyAsync(h_b, d_b, sizeof(float)*N, cudaMemcpyDeviceToHost, streams[1]);
 
+	cudaDeviceSynchronize(); // NOTE: this is needed to make sure prev dev opt is done! 
+
 	int error_a = 0; 
 	for(int i=0; i<N; i++) {
 		if(h_a[i] != N) {
@@ -107,8 +118,11 @@ int main(int argc, char **argv)
 	cudaFree(d_a);
 	cudaFree(d_b);
 
-	free(h_a);
-	free(h_b);
+	//free(h_a);
+	//free(h_b);
+
+	cudaFreeHost(h_a);
+	cudaFreeHost(h_b);
 
 	return 0;
 }
