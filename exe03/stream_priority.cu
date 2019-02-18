@@ -4,7 +4,7 @@
 #include <cuda_runtime.h>
 
 // same kernel with different name
-__global__ void Kernel_low(float*x, int len)
+__global__ void Kernel_00(float*x, int len)
 {
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -20,7 +20,7 @@ __global__ void Kernel_low(float*x, int len)
 
 }
 
-__global__ void Kernel_high(float*x, int len)
+__global__ void Kernel_01(float*x, int len)
 {
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -94,11 +94,11 @@ int main(int argc, char **argv)
 	}
 
 	// configure priority for streams
-	//cudaStreamCreateWithPriority(&streams[0], cudaStreamNonBlocking, priority_l); // stream 0 with low priority
-	//cudaStreamCreateWithPriority(&streams[1], cudaStreamNonBlocking, priority_h); // stream 1 with high priority
+	cudaStreamCreateWithPriority(&streams[0], cudaStreamNonBlocking, priority_l); // stream 0 with low priority
+	cudaStreamCreateWithPriority(&streams[1], cudaStreamNonBlocking, priority_h); // stream 1 with high priority
 
-	cudaStreamCreateWithPriority(&streams[0], cudaStreamNonBlocking, priority_h); // stream 0 with low priority
-	cudaStreamCreateWithPriority(&streams[1], cudaStreamNonBlocking, priority_l); // stream 1 with high priority
+	//cudaStreamCreateWithPriority(&streams[0], cudaStreamNonBlocking, priority_h); // stream 0 with low priority
+	//cudaStreamCreateWithPriority(&streams[1], cudaStreamNonBlocking, priority_l); // stream 1 with high priority
 
 	// h2d
 	cudaMemcpyAsync(d_a, h_a, sizeof(float)*N, cudaMemcpyHostToDevice, streams[0]);
@@ -109,11 +109,11 @@ int main(int argc, char **argv)
 	dim3 grid = dim3((N + block.x - 1) / block.x,1,1);
 
 	// low priority kernel 
-	Kernel_low <<< grid, block, 0, streams[0] >>> (d_a, N); // a + x
+	Kernel_00 <<< grid, block, 0, streams[0] >>> (d_a, N); // a + x
 	cudaEventRecord(events[0], streams[0]);
 
 	// high priority kernel 
-	Kernel_high <<< grid, block, 0, streams[1] >>> (d_b, N); // b + x
+	Kernel_01 <<< grid, block, 0, streams[1] >>> (d_b, N); // b + x
 	cudaEventRecord(events[1], streams[1]);
 
 	cudaEventSynchronize(events[0]);
