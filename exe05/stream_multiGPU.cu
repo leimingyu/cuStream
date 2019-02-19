@@ -22,13 +22,11 @@ __global__ void testKernel(float*x, float*y, int len)
 
 	if(tid < len) {
 		float sum = x[tid];
-		//printf("%d = %f\n", tid, sum);
 		int iter = 0;
 
 		while(iter++ < len) {
 			sum += 1;
 		}
-		//printf("%d = %f\n", tid, sum);
 		y[tid] = sum;
 	}
 
@@ -62,16 +60,13 @@ int main(int argc, char **argv)
 		// initialize
 		for (int j=0; j<mgpu[i].len; j++)
 		{
-			//mgpu[i].h_input[j] = (float)rand() / (float)RAND_MAX;
 			mgpu[i].h_input[j] = 0.; 
 		}
 
 	}
 
-
 	dim3 block = dim3(128, 1, 1);
 	dim3 grid  = dim3((N + block.x - 1)/ block.x, 1, 1);
-
 
 	// data transfer  + kernel
 	for(int i=0; i<GpuNum; i++)
