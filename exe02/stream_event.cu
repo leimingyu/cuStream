@@ -50,13 +50,6 @@ int main(int argc, char **argv)
 	std::cout << "Launching " << streamsNum << " cuda streams." << std::endl;
 	
 	// host 
-	/*
-	// pageable
-	float *h_a = (float*)malloc(sizeof(float) * N);
-	float *h_b = (float*)malloc(sizeof(float) * N);
-	*/
-
-
 	float *h_a = NULL;
 	float *h_b = NULL;
 	float *h_c = NULL;
