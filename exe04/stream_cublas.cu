@@ -136,6 +136,9 @@ int main(int argc, char **argv)
 		cudaStreamDestroy(streams[i]);
 	}
 
+	cublasDestroy(handle0);
+	cublasDestroy(handle1);
+
 	cudaFree(d_a);
 	cudaFree(d_b);
 	cudaFree(d_c);
@@ -143,9 +146,6 @@ int main(int argc, char **argv)
 	cudaFree(d_x);
 	cudaFree(d_y);
 	cudaFree(d_z);
-
-	//free(h_a);
-	//free(h_b);
 
 	cudaFreeHost(h_a);
 	cudaFreeHost(h_b);
