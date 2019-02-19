@@ -9,13 +9,11 @@ __global__ void testKernel(float*x, int len)
 
 	if(tid < len) {
 		float sum = x[tid];
-		//printf("%d = %f\n", tid, sum);
 		int iter = 0;
 
 		while(iter++ < len) {
 			sum += 1;
 		}
-		//printf("%d = %f\n", tid, sum);
 		x[tid] = sum;
 	}
 
@@ -40,13 +38,6 @@ int main(int argc, char **argv)
 	std::cout << "Launching " << streamsNum << " cuda streams." << std::endl;
 	
 	// host 
-	/*
-	// pageable
-	float *h_a = (float*)malloc(sizeof(float) * N);
-	float *h_b = (float*)malloc(sizeof(float) * N);
-	*/
-
-
 	float *h_a = NULL;
 	float *h_b = NULL;
 	cudaMallocHost((void**)&h_a, sizeof(float) * N);
@@ -117,9 +108,6 @@ int main(int argc, char **argv)
 
 	cudaFree(d_a);
 	cudaFree(d_b);
-
-	//free(h_a);
-	//free(h_b);
 
 	cudaFreeHost(h_a);
 	cudaFreeHost(h_b);
