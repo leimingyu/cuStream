@@ -4,3 +4,4 @@
 3. exe03 : streams with priority 
 4. exe04 : cuBLAS with cuda streams
 5. exe05 : streams for multi-gpu systems
+6. exe06 : separate streams for each class 
